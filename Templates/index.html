@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Event Registration</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+  <body>
+  <nav class="navbar is-light" role="navigation" aria-label="dropdown navigation">
+  <a class="navbar-item" href="/">
+    <figure class="image is-32x32">
+      <img class="is-rounded" src="https://i.pinimg.com/originals/a2/33/05/a233054aa0c5a03663171e9182c791d4.png">
+    </figure>
+    <strong>Events.io</strong>
+  </a>
+</nav>
+
+<section class="hero is-primary">
+  <div class="hero-body">
+    <p class="title">
+      Event Name
+    </p>
+    <p class="subtitle">
+      Register here for the <strong>Event Name</strong>
+    </p>
+  </div>
+</section>
+  <br><br>
+
+
+  <form method="post" enctype="multipart/form-data">
+     <div class="container is-fluid" id="actual">
+    {% csrf_token %}
+    <div class="field">
+  <label class="label">Full Name</label>
+  <div class="control">
+    <input class="input" id="fname" name="fullname" type="text" style="width: 70%" required >
+  </div>
+</div>
+
+    <div class="field">
+  <label class="label">Mobile</label>
+  <div class="control">
+    <input class="input" id="mobile" name="mobile" type="text" style="width: 70%" required>
+  </div>
+</div>
+
+<div class="field">
+  <label class="label">Email</label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input" id="email" name="email" type="email" placeholder="sam@gmail.com" style="width: 70%" required>
+    <span class="icon is-small is-left">
+      <i class="fas fa-envelope"></i>
+    </span>
+  </div>
+</div>
+<br>
+    <div class="field">
+  <div id="file-js-example" class="file is-info has-name">
+    <label class="file-label">
+      <input class="file-input" type="file" id="filePhoto" accept="image/jpeg,image/jpg,image/png" name="id" required>
+     <span class="file-cta">
+        <span class="file-icon">
+          <i class="fas fa-upload"></i>
+        </span>
+        <span class="file-label">
+          Upload Id
+        </span>
+      </span>
+        <span class="file-name">
+      No file uploaded
+    </span>
+    </label>
+  </div>
+      <p>Note: Supported formats jpeg,png</p>
+</div>
+
+<br>
+<div class="field">
+  <label class="label">Registration Type</label>
+  <div class="control">
+    <div class="select">
+      <select id="type" name="type" required>
+        <option value="self">Self</option>
+        <option value="group">Group</option>
+        <option value="corporate">Corporate</option>
+        <option value="others">Others</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+
+    <div class="field" id="number">
+  <label class="label">Number Of Tickets</label>
+  <div class="control">
+       <input id="ticket" class="input" name="no_ticket" type="number" style="width: 20%" required>
+  </div>
+</div>
+  <div class="control">
+  </div>
+    </div>
+
+    <div class="container is-fluid" id="review">
+   <div class="field">
+  <label class="label">Full Name</label>
+  <div class="control">
+    <input class="input" id="rname" type="text" style="width: 70%" readonly >
+  </div>
+</div>
+
+    <div class="field">
+  <label class="label">Mobile</label>
+  <div class="control">
+    <input class="input" id="rmobile" type="text" style="width: 70%" readonly>
+  </div>
+</div>
+    <div class="field">
+  <label class="label">Email</label>
+  <div class="control has-icons-left has-icons-right">
+    <input class="input" id="remail" type="email" style="width: 70%"  readonly>
+    <span class="icon is-small is-left">
+      <i class="fas fa-envelope"></i>
+    </span>
+  </div>
+</div>
+
+    <div class="field">
+  <label class="label">Your Id</label>
+    <figure class="image is-256x256">
+  <img src="" id="previewHolder">
+</figure>
+    </div>
+<br>
+    <div class="field">
+  <label class="label">Registration Type</label>
+  <div class="control">
+    <input class="input" id="rtype" type="text" style="width: 20%" readonly>
+  </div>
+</div>
+
+    <div class="field">
+  <label class="label">Number Of Tickets</label>
+  <div class="control">
+       <input class="input" id="rnumber" type="number" style="width: 20%" readonly>
+  </div>
+</div>
+
+<div class="field is-grouped">
+  <div class="control">
+    <input type="submit" value="Confirm" class="button is-success">
+  </div>
+</div>
+  </div>
+  <br><br>
+
+    </form>
+  <div class="field is-grouped">
+  <div class="control">
+    <button id="submit" class="button is-link is-primary" style="margin-left: 30px">Submit</button>
+  </div>
+    <div class="control">
+    <button id="edit" class="button is-link is-danger" style="margin-left: 30px">Edit</button>
+  </div>
+  </div>
+
+
+
+
+
+
+  <script>
+
+  if ($('#type').val() == 'self')
+  {
+    $('#number').hide();
+    $("#ticket").removeAttr('required');
+  }
+
+  $('#review').hide();
+  $('#edit').hide();
+
+  const fileInput = document.querySelector('#file-js-example input[type=file]');
+  fileInput.onchange = () => {
+    if (fileInput.files.length > 0) {
+      const fileName = document.querySelector('#file-js-example .file-name');
+      fileName.textContent = fileInput.files[0].name;
+    }
+  }
+  function readURL(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      $('#previewHolder').attr('src', e.target.result);
+    }
+
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+$("#filePhoto").change(function() {
+  readURL(this);
+});
+
+  $('#type').change(function(){
+   var selection = $(this).val();
+   if(selection == 'self')
+   {
+      $('#number').hide();
+      $("#ticket").removeAttr('required');
+   }
+   else
+   {
+      $('#number').show();
+      $("#ticket").attr('required','')
+   }
+
+});
+
+  var form = document.querySelector('form')
+  var triggerButton = document.querySelector('#submit')
+
+  triggerButton.onclick = function () {
+    if (form.reportValidity()){
+      $('#actual').hide();
+      $('#submit').hide();
+      document.querySelector('#rname').value = document.querySelector('#fname').value;
+      document.querySelector('#rmobile').value = document.querySelector('#mobile').value;
+      document.querySelector('#remail').value = document.querySelector('#email').value;
+      document.querySelector('#rtype').value = document.querySelector('#type').value;
+      if (document.querySelector('#rtype').value == 'self')
+        document.querySelector('#rnumber').value = 1
+      else
+        document.querySelector('#rnumber').value = document.querySelector('#ticket').value;
+      $('#review').show();
+      $('#edit').show();
+    }
+    else
+      form.reportValidity();
+  }
+
+  var editbutton = document.querySelector('#edit')
+  editbutton.onclick = function () {
+    $('#actual').show();
+    $('#submit').show();
+    $('#review').hide();
+    $('#edit').hide();
+  }
+
+</script>
+  </body>
+</html>
